@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>61 Roulette</title>
+
+<style>
+
+body{
+text-align:center;
+font-family:Arial;
+margin-top:30px;
+background:#111;
+color:white;
+}
+
+.slot-container{
+display:flex;
+justify-content:center;
+gap:40px;
+margin-bottom:20px;
+}
+
+.slot{
+width:600px;
+height:400px;
+overflow:hidden;
+border:5px solid cyan;
+border-radius:10px;
+background:black;
+}
+
+.reel{
+position:relative;
+}
+
+.reel img{
+width:600px;
+height:400px;
+object-fit:cover;
+display:block;
+}
+
+button{
+font-size:22px;
+padding:12px 30px;
+background:cyan;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:disabled{
+opacity:0.5;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🎰 61 Roulette 🎰</h1>
+
+<div class="slot-container">
+
+<div class="slot">
+<div class="reel" id="reelA"></div>
+</div>
+
+<div class="slot">
+<div class="reel" id="reelB"></div>
+</div>
+
+</div>
+
+<button onclick="spin()" id="spinBtn">ROLL</button>
+
+<script>
+
+const folderA=[
+"folderA/1.png","folderA/2.png","folderA/3.png","folderA/4.png","folderA/5.png",
+"folderA/6.png","folderA/7.png","folderA/8.png","folderA/9.png","folderA/10.png",
+"folderA/11.png","folderA/12.png","folderA/13.png","folderA/14.png","folderA/15.png",
+"folderA/16.png","folderA/17.png","folderA/18.png","folderA/19.png","folderA/20.png",
+"folderA/21.png","folderA/22.png"
+];
+
+const folderB=[
+"folderB/1.png","folderB/2.png","folderB/3.png","folderB/4.png","folderB/5.png",
+"folderB/6.png","folderB/7.png","folderB/8.png","folderB/9.png","folderB/10.png",
+"folderB/11.png","folderB/12.png","folderB/13.png","folderB/14.png","folderB/15.png",
+"folderB/16.png","folderB/17.png","folderB/18.png","folderB/19.png","folderB/20.png",
+"folderB/21.png","folderB/22.png","folderB/23.png"
+];
+
+const IMG_HEIGHT = 400;
+
+function random(arr){
+return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function buildReel(reel,images,target){
+
+reel.innerHTML="";
+
+for(let i=0;i<15;i++){
+
+let img=document.createElement("img");
+img.src=images[Math.floor(Math.random()*images.length)];
+reel.appendChild(img);
+
+}
+
+let final=document.createElement("img");
+final.src=target;
+reel.appendChild(final);
+
+}
+
+function spin(){
+
+const btn=document.getElementById("spinBtn");
+btn.disabled=true;
+
+const reelA=document.getElementById("reelA");
+const reelB=document.getElementById("reelB");
+
+const resultA=random(folderA);
+const resultB=random(folderB);
+
+buildReel(reelA,folderA,resultA);
+buildReel(reelB,folderB,resultB);
+
+let posA=0;
+let posB=0;
+
+let speedA=80;
+let speedB=80;
+
+let stopA=false;
+let stopB=false;
+
+function animate(){
+
+posA+=speedA;
+posB+=speedB;
+
+reelA.style.transform=`translateY(-${posA}px)`;
+reelB.style.transform=`translateY(-${posB}px)`;
+
+if(!stopA){
+
+if(posA >= IMG_HEIGHT*15){
+posA = IMG_HEIGHT*15;
+stopA=true;
+}
+
+}
+
+if(stopA && !stopB){
+
+speedB*=0.97;
+
+if(posB >= IMG_HEIGHT*15){
+posB = IMG_HEIGHT*15;
+stopB=true;
+}
+
+}
+
+if(!stopA || !stopB){
+requestAnimationFrame(animate);
+}else{
+btn.disabled=false;
+}
+
+}
+
+animate();
+
+}
+
+</script>
+
+</body>
+</html>
